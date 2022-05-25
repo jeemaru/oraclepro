@@ -9,16 +9,18 @@ public class PhoneApp {
 		
 		Scanner sc = new Scanner(System.in);
 		PhoneDao phoneDao = new PhoneDao();
+		System.out.println("**********************************");
+		System.out.println("*         전화번호 관리 프로그램          *");
+		System.out.println("**********************************");
+		System.out.println(" ");
 		
 		while(true) {
-			System.out.println("**********************************");
-			System.out.println("*         전화번호 관리 프로그램          *");
-			System.out.println("**********************************");
 			System.out.println(" ");
 			System.out.println("1. 리스트 2.등록 3.수정 4.삭제 5.검색 6.종료");
 			System.out.println("-----------------------------------");
 			System.out.print("메뉴번호:");
-			int num = sc.nextInt();
+	        int num = sc.nextInt();
+	        sc.nextLine();
 			
 			if(num == 1) {
 				System.out.println("<1.리스트>");
@@ -38,10 +40,8 @@ public class PhoneApp {
 				System.out.println("<2.등록>");
 				System.out.print("이름 > ");
 				String name = sc.nextLine();
-				System.out.println(" ");
 				System.out.print("휴대전화 > ");
 				String hp = sc.nextLine();
-				System.out.println(" ");
 				System.out.print("회사번호 > ");
 				String company = sc.nextLine();
 				System.out.println("1건이 등록되었습니다.");
@@ -54,6 +54,7 @@ public class PhoneApp {
 				System.out.println("<3.수정>");
 				System.out.print("번호 > ");
 				int personId = sc.nextInt();
+				sc.nextLine();
 				System.out.print("이름 > ");
 				String name = sc.nextLine();
 				System.out.print("휴대전화 > ");
@@ -76,6 +77,19 @@ public class PhoneApp {
 			}
 			if(num == 5) {
 				System.out.println("<5.검색>");
+				System.out.print("검색 > ");
+				String str = sc.nextLine();
+				
+				List<PersonVo> personList = phoneDao.personSearch(str);
+				
+				for(int i=0; i<personList.size(); i++) {
+					int pId = personList.get(i).getPerson_id();
+					String pName = personList.get(i).getName();
+					String pHp= personList.get(i).getHp();
+					String pCom = personList.get(i).getCompany();
+					
+					System.out.println(pId+".  " + pName + "  " + pHp + "  " + pCom);
+				}
 			}
 			if(num == 6) {
 				System.out.println("<6.종료>");
@@ -84,11 +98,11 @@ public class PhoneApp {
 				System.out.println("**************************************");
 				break;	
 			}
-			sc.close();
-		}
-		
+			
+		}sc.close();	
 
 	}
+	
 
 }
 
@@ -148,5 +162,15 @@ where person_id = 6;
 --데이터 삭제
 delete from person
 where person_id = '2';
+
+--데이터 검색
+select  person_id,
+        name,
+        hp,
+        company
+from person;
+where name like '%"+?+"%'
+or hp like '%"+?+"%'"
+or company like '%"+?+"%';
 
  */
