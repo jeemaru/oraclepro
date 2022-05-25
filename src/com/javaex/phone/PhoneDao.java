@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import com.javaex.phone.PersonVo;
 
 public class PhoneDao {
 		
@@ -68,7 +67,7 @@ public class PhoneDao {
 	
 	
 	// --작가 등록 메소드
-	public int authorInsert(PersonVo PersonVo) {
+	public int personInsert(PersonVo PersonVo) {
 
 		int count = -1;
 
@@ -79,15 +78,15 @@ public class PhoneDao {
 			// 3. SQL문 준비 / 바인딩 / 실행
 			// SQL문 준비
 			String query = "";
-			query += " insert into author ";
-			query += " values(seq_author_id.nextval, ?, ?) ";
+			query += " insert into person ";
+			query += " values(seq_person_id.nextval, ?, ?, ?) ";
 			System.out.println(query);
 
 			// 바인딩
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, PersonVo.getName());
 			pstmt.setString(2, PersonVo.getHp());
-			pstmt.setString(3, PersonVo.getCompay());
+			pstmt.setString(3, PersonVo.getCompany());
 
 			// 실행
 			count = pstmt.executeUpdate();
@@ -107,7 +106,7 @@ public class PhoneDao {
 	}
 
 	// --작가 삭제 메소드
-	public int authorDelete(int authorId) {
+	public int PersonDelete(int Person_id) {
 		int count = -1;
 
 		getConnection();
@@ -117,13 +116,13 @@ public class PhoneDao {
 			// 3. SQL문 준비 / 바인딩 / 실행
 			// SQL문 준비
 			String query = "";
-			query += " delete from author ";
-			query += " where author_id = ? ";
+			query += " delete from person ";
+			query += " where person_id = ? ";
 			System.out.println(query);
 
 			// 바인딩
 			pstmt = conn.prepareStatement(query);
-			pstmt.setInt(1, authorId);
+			pstmt.setInt(1, Person_id);
 
 			// 실행
 			count = pstmt.executeUpdate();
@@ -141,7 +140,7 @@ public class PhoneDao {
 	}
 
 	// --작가 수정 메소드
-	public int authorUpdate(PersonVo PersonVo) {
+	public int personUpdate(PersonVo PersonVo) {
 		int count = -1;
 
 		getConnection();
@@ -151,18 +150,19 @@ public class PhoneDao {
 			// 3. SQL문 준비 / 바인딩 / 실행
 			// SQL문 준비
 			String query = "";
-			query += " update author ";
-			query += " set author_name = ?, ";
-			query += "     author_desc = ? ";
-			query += " where author_id = ? ";
+			query += " update person ";
+			query += " set name = ?, ";
+			query += "     hp = ?, ";
+			query += "     company = ? ";
+			query += " where person_id = ? ";
 			System.out.println(query);
 
 			// 바인딩
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, PersonVo.getName());
 			pstmt.setString(2, PersonVo.getHp());
-			pstmt.setString(3, PersonVo.getCompay());
-
+			pstmt.setString(3, PersonVo.getCompany());
+			pstmt.setInt(4, PersonVo.getPerson_id());
 			// 실행
 			count = pstmt.executeUpdate();
 
@@ -179,7 +179,7 @@ public class PhoneDao {
 	}
 
 	// --작가 전체리스트 가져오기 메소드
-	public List<PersonVo> authorSelect() {
+	public List<PersonVo> personSelect() {
 
 		// 리스트 준비
 		List<PersonVo> personList = new ArrayList<PersonVo>();
@@ -191,10 +191,11 @@ public class PhoneDao {
 			// 3. SQL문 준비 / 바인딩 / 실행
 			// SQL문 준비
 			String query = "";
-			query += " select  author_id, ";
-			query += "         author_name, ";
-			query += "         author_desc ";
-			query += " from author ";
+			query += " select  person_id, ";
+			query += "         name, ";
+			query += "         hp, ";
+			query += "         company ";
+			query += " from person ";
 			System.out.println(query);
 
 			// 바인딩
@@ -207,11 +208,13 @@ public class PhoneDao {
 			// 4.결과처리
 			// 반복문으로 Vo 만들기 list에 추가하기
 			while (rs.next()) {
-				String personName = rs.getString("author_id");
-				String personHp = rs.getString("author_name");
-				String personCompay = rs.getString("author_desc");
+				int personId = rs.getInt("person_id");
+				String personName = rs.getString("name");
+				String personHp = rs.getString("hp");
+				String personCompay = rs.getString("company");
+				
 
-				PersonVo personVo = new PersonVo(personName, personHp, personCompay);
+				PersonVo personVo = new PersonVo(personId ,personName, personHp, personCompay);
 
 				personList.add(personVo);
 			}
